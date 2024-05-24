@@ -1,0 +1,6 @@
+! ----- names for bodies -----
+$ Group_3 = 1
+! ----- names for boundaries -----
+$ Group_1 = 1
+$ Group_2 = 2
+$ bnry4 = 3
