@@ -1,0 +1,94 @@
+Header
+  CHECK KEYWORDS "Warn"
+  Mesh DB "." "Mesh_1"
+End
+
+Simulation
+  Max Output Level = 5
+  Coordinate System = Cartesian
+  Coordinate Mapping(3) = 1 2 3
+  Simulation Type = Steady state
+  Steady State Max Iterations = 1
+  Output Intervals = 1
+  Timestepping Method = BDF
+  BDF Order = 1
+  Solver Input File = case.sif
+  Post File = case.vtu
+  Output File = case.result
+! Salome converted to meters
+!  Coordinate Scaling = 0.001
+Desired Mesh Pieces = 3
+End
+
+Constants
+  Permeability of Vacuum = 1.25663706e-06
+  Permittivity of Vacuum = 8.854187817e-12
+End
+
+! copper_eq
+Equation 1
+  Active Solvers(1) = 1   ! StaticCurrentConduction, 
+End
+
+
+! StaticCurrentConduction
+Solver 1
+  Equation = Static Current Conduction
+  Procedure = "StatCurrentSolve" "StatCurrentSolver"
+  Calculate Joule Heating = True
+  Variable = Potential
+  Calculate Volume Current = True
+  Exec Solver = Always
+  Stabilize = True
+  Optimize Bandwidth = True
+  Steady State Convergence Tolerance = 1e-05
+  Nonlinear System Convergence Tolerance = 1e-07
+  Nonlinear System Max Iterations = 20
+  Nonlinear System Newton After Iterations = 3
+  Nonlinear System Newton After Tolerance = 0.001
+  Nonlinear System Relaxation Factor = 1
+  Linear System Solver = Direct
+  Linear System Direct Method = MUMPS
+  Apply Mortar BCs = Logical True
+End
+
+
+! copper
+Material 1
+  Density = 8960.0
+  Electric Conductivity = 32300000
+  Emissivity = 0.012
+  Heat Capacity = 415.0
+  Heat Conductivity = 401.0
+  Relative Permeability = 1
+  Relative Permittivity = 1
+End
+
+
+! copper
+Body 1
+  Target Bodies(1) = 1
+  Equation = 1  ! copper_eq
+  Material = 1  ! copper
+End
+
+
+! pos
+Boundary Condition 1
+  Target Boundaries(1) = 1
+  Name = "VoltageP"
+  Potential = 1
+  Mortar BC = 3
+End
+
+! neg
+Boundary Condition 2
+  Target Boundaries(1) = 2
+  Name = "Current_out"
+  Electric Current Density = -300000
+End
+
+
+
+
+
